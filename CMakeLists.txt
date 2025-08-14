@@ -19,6 +19,7 @@ add_executable(sadhana
   src/audio_input.cpp
   src/vad.cpp
   src/sqlite_logger.cpp
+  src/config.cpp        # NEW
 )
 
 target_include_directories(sadhana PRIVATE src)

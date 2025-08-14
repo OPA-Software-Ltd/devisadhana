@@ -1,35 +1,33 @@
 ```markdown
-# Sadhana (Milestone 1: VAD + SQLite logger)
+## Config file
+You can keep your preferred settings in a file. CLI flags still override config.
 
-This version captures microphone input, runs a simple energy-based VAD, and logs sessions and VAD events into a SQLite database.
+**Default path:**
+- `$XDG_CONFIG_HOME/sadhana/sadhana.toml` or
+- `~/.config/sadhana/sadhana.toml`
 
-## Build
-
+**Use a custom path:**
 ```bash
-cmake -S . -B build -G Ninja
-cmake --build build
-./build/bin/sadhana --list-devices
-./build/bin/sadhana -d <index> --sr 48000 --fpb 480
+./build/bin/sadhana --config ~/my-sadhana.toml
 ```
 
-## Options
-- `-l, --list-devices` – list available input devices
-- `-d, --device <index>` – select specific input device
-- `--sr <Hz>` – set sample rate (default 48000)
-- `--fpb <frames>` – frames per buffer (default 480)
-- `--db <path>` – SQLite DB path (default `$XDG_DATA_HOME/sadhana/sadhana.db`)
+**Format (TOML/INI-like):**
+```toml
+# Choose device and audio params
+device = 6
+sample_rate = 48000
+frames_per_buffer = 480
 
-## Usage
-When running, it prints `[SPEECH]` or `[silence]` with current RMS and dBFS. Transitions are recorded in `vad_events`, sessions in `sessions`.
+# Calibration and VAD tuning
+calibrate_ms = 5000
+calib_attack = 18
+calib_rel_above_floor = 6
+vad_hang_ms = 120
+show_thresholds = true
 
-Check the DB:
-```bash
-sqlite3 ~/.local/share/sadhana/sadhana.db 'SELECT * FROM sessions;'
-sqlite3 ~/.local/share/sadhana/sadhana.db 'SELECT * FROM vad_events ORDER BY id DESC LIMIT 10;'
+# Optional: DB path (supports ~ expansion)
+# db_path = "~/.local/share/sadhana/sadhana.db"
 ```
 
-## Next steps
-- Replace energy-based VAD with WebRTC VAD
-- Add TUI timeline view
-- Integrate keyword spotting (iteration markers) with Vosk/whisper.cpp
-```
+**Precedence:** `CLI` > `config` > defaults.
+

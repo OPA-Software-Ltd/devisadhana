@@ -2,11 +2,13 @@
 #include "rms.hpp"
 #include "vad.hpp"
 #include "sqlite_logger.hpp"
+#include "config.hpp"  // NEW
 #include <atomic>
 #include <algorithm>
 #include <chrono>
 #include <csignal>
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -31,35 +33,40 @@ struct Args {
     float calib_attack  = 18.0f;    // dB above floor to ENTER speech
     float calib_rel_above_floor = 6.0f; // dB ABOVE floor to KEEP speech
     bool  show_thresholds = false;
+
+    // config path used (for info)
+    std::string config_path;
 };
 
-Args parse_args(int argc, char** argv) {
-    Args a{};
-    const char* xdg = std::getenv("XDG_DATA_HOME");
-    if (xdg) a.db_path = std::string(xdg) + "/sadhana/sadhana.db";
-    else {
-        const char* home = std::getenv("HOME");
-        a.db_path = std::string(home ? home : ".") + "/.local/share/sadhana/sadhana.db";
+static const char* scan_flag_value(int argc, char** argv, const char* longflag, const char* shortflag) {
+    for (int i=1;i<argc;++i) {
+        std::string s = argv[i];
+        if ((longflag && s == longflag) || (shortflag && s == shortflag)) {
+            if (i+1 < argc) return argv[i+1];
+        }
     }
+    return nullptr;
+}
 
+// Parse CLI flags and override values in 'a'.
+static void parse_args_into(Args& a, int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         std::string s = argv[i];
-        if      (s == "--list-devices" || s == "-l") a.list_devices = true;
+        if (s == "--list-devices" || s == "-l") a.list_devices = true;
         else if ((s == "--device" || s == "-d") && i + 1 < argc) a.device_index = std::stoi(argv[++i]);
         else if (s == "--sr" && i + 1 < argc) a.sample_rate = std::stod(argv[++i]);
         else if ((s == "--fpb" || s == "--frames") && i + 1 < argc) a.frames_per_buffer = static_cast<unsigned long>(std::stoul(argv[++i]));
         else if (s == "--db" && i + 1 < argc) a.db_path = argv[++i];
-
-        else if (s == "--vad-attack"   && i + 1 < argc) a.vad_attack    = std::stof(argv[++i]);
-        else if (s == "--vad-release"  && i + 1 < argc) a.vad_release   = std::stof(argv[++i]);
-        else if (s == "--vad-hang"     && i + 1 < argc) a.vad_hang_ms   = std::stoi(argv[++i]);
-        else if (s == "--calibrate"    && i + 1 < argc) a.calibrate_ms  = std::stoi(argv[++i]);
-        else if (s == "--calib-attack" && i + 1 < argc) a.calib_attack  = std::stof(argv[++i]);
+        else if (s == "--vad-attack" && i + 1 < argc) a.vad_attack = std::stof(argv[++i]);
+        else if (s == "--vad-release" && i + 1 < argc) a.vad_release = std::stof(argv[++i]);
+        else if (s == "--vad-hang" && i + 1 < argc) a.vad_hang_ms = std::stoi(argv[++i]);
+        else if (s == "--calibrate" && i + 1 < argc) a.calibrate_ms = std::stoi(argv[++i]);
+        else if (s == "--calib-attack" && i + 1 < argc) a.calib_attack = std::stof(argv[++i]);
         else if (s == "--calib-rel-above-floor" && i + 1 < argc) a.calib_rel_above_floor = std::stof(argv[++i]);
         else if (s == "--show-thresholds") a.show_thresholds = true;
-
+        else if ((s == "--config" || s == "-c") && i + 1 < argc) a.config_path = expand_path(argv[++i]);
         else if (s == "--help" || s == "-h") {
-            std::cout << "Sadhana probe + VAD + calibration\n"
+            std::cout << "Sadhana probe + VAD + calibration + config\n"
                       << "  -l, --list-devices                 List input devices\n"
                       << "  -d, --device <index>               Use specific input device index\n"
                       << "      --sr <Hz>                      Sample rate (default 48000)\n"
@@ -71,11 +78,11 @@ Args parse_args(int argc, char** argv) {
                       << "      --calibrate <ms>               Measure noise floor for N ms, then set thresholds\n"
                       << "      --calib-attack <dB>            Attack margin above floor (default 18)\n"
                       << "      --calib-rel-above-floor <dB>   Release margin ABOVE floor (default 6)\n"
-                      << "      --show-thresholds              Print final thresholds and EMA (debug)\n";
+                      << "      --show-thresholds              Print final thresholds and EMA (debug)\n"
+                      << "  -c, --config <path>                Load config file (default: ~/.config/sadhana/sadhana.toml)\n";
             std::exit(0);
         }
     }
-    return a;
 }
 
 static float percentile(std::vector<float>& v, float p) {
@@ -89,7 +96,38 @@ int main(int argc, char** argv) {
     std::signal(SIGINT, on_sigint);
     std::signal(SIGTERM, on_sigint);
 
-    Args args = parse_args(argc, argv);
+    // 1) Establish defaults and DB path
+    Args args{};
+    const char* xdg = std::getenv("XDG_DATA_HOME");
+    if (xdg) args.db_path = std::string(xdg) + "/sadhana/sadhana.db";
+    else {
+        const char* home = std::getenv("HOME");
+        args.db_path = std::string(home ? home : ".") + "/.local/share/sadhana/sadhana.db";
+    }
+
+    // 2) Find config path (CLI wins for path only)
+    if (const char* cp = scan_flag_value(argc, argv, "--config", "-c")) {
+        args.config_path = expand_path(cp);
+    } else {
+        args.config_path = default_config_path();
+    }
+
+    // 3) Load config file and apply as base values
+    AppConfig cfg = load_config_file(args.config_path);
+    if (cfg.device)                args.device_index = cfg.device;
+    if (cfg.sample_rate)           args.sample_rate = *cfg.sample_rate;
+    if (cfg.frames_per_buffer)     args.frames_per_buffer = *cfg.frames_per_buffer;
+    if (cfg.calibrate_ms)          args.calibrate_ms = *cfg.calibrate_ms;
+    if (cfg.calib_attack)          args.calib_attack = *cfg.calib_attack;
+    if (cfg.calib_rel_above_floor) args.calib_rel_above_floor = *cfg.calib_rel_above_floor;
+    if (cfg.vad_attack)            args.vad_attack = *cfg.vad_attack;
+    if (cfg.vad_release)           args.vad_release = *cfg.vad_release;
+    if (cfg.vad_hang_ms)           args.vad_hang_ms = *cfg.vad_hang_ms;
+    if (cfg.show_thresholds)       args.show_thresholds = *cfg.show_thresholds;
+    if (cfg.db_path)               args.db_path = *cfg.db_path;
+
+    // 4) Parse CLI to override
+    parse_args_into(args, argc, argv);
 
     if (args.list_devices) {
         auto devs = AudioInput::list_input_devices();
@@ -148,20 +186,11 @@ int main(int argc, char** argv) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
 
-            // Conservative floor from 10th percentile of quiet
             float floor_db = percentile(samples, 0.10f);
+            float attack  = floor_db + args.calib_attack;          // enter speech
+            float release = floor_db + args.calib_rel_above_floor; // keep speech
+            if (release >= attack - 8.0f) release = attack - 8.0f; // hysteresis
 
-            // New rule: release sits ABOVE the floor (so we can drop back to silence),
-            // and far enough below attack for hysteresis.
-            float attack  = floor_db + args.calib_attack;          // e.g., floor + 18
-            float release = floor_db + args.calib_rel_above_floor; // e.g., floor + 6
-
-            // Enforce strong hysteresis (≥ 8 dB)
-            if (release >= attack - 8.0f) {
-                release = attack - 8.0f;
-            }
-
-            // Clamp to sane limits
             attack  = std::clamp(attack,  -30.0f, -1.0f);
             release = std::clamp(release, -90.0f, attack - 6.0f);
 
@@ -199,4 +228,3 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
-

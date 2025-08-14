@@ -89,6 +89,16 @@ build CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o: CXX_COMPILER__sadhana_unsc
   TARGET_COMPILE_PDB = CMakeFiles/sadhana.dir/
   TARGET_PDB = bin/sadhana.pdb
 
+build CMakeFiles/sadhana.dir/src/config.cpp.o: CXX_COMPILER__sadhana_unscanned_Release /home/sophia/Documents/development/devisadhana/src/config.cpp || cmake_object_order_depends_target_sadhana
+  CONFIG = Release
+  DEP_FILE = CMakeFiles/sadhana.dir/src/config.cpp.o.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++20 -Wall -Wextra -Wpedantic -pthread
+  INCLUDES = -I/home/sophia/Documents/development/devisadhana/src
+  OBJECT_DIR = CMakeFiles/sadhana.dir
+  OBJECT_FILE_DIR = CMakeFiles/sadhana.dir/src
+  TARGET_COMPILE_PDB = CMakeFiles/sadhana.dir/
+  TARGET_PDB = bin/sadhana.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target sadhana
@@ -97,7 +107,7 @@ build CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o: CXX_COMPILER__sadhana_unsc
 #############################################
 # Link the executable bin/sadhana
 
-build bin/sadhana: CXX_EXECUTABLE_LINKER__sadhana_Release CMakeFiles/sadhana.dir/src/main.cpp.o CMakeFiles/sadhana.dir/src/audio_input.cpp.o CMakeFiles/sadhana.dir/src/vad.cpp.o CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o | /usr/lib/libsqlite3.so /usr/lib/libportaudio.so /usr/lib/libasound.so /usr/lib/libm.so /usr/lib/libpthread.a
+build bin/sadhana: CXX_EXECUTABLE_LINKER__sadhana_Release CMakeFiles/sadhana.dir/src/main.cpp.o CMakeFiles/sadhana.dir/src/audio_input.cpp.o CMakeFiles/sadhana.dir/src/vad.cpp.o CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o CMakeFiles/sadhana.dir/src/config.cpp.o | /usr/lib/libsqlite3.so /usr/lib/libportaudio.so /usr/lib/libasound.so /usr/lib/libm.so /usr/lib/libpthread.a
   CONFIG = Release
   DEP_FILE = CMakeFiles/sadhana.dir/link.d
   FLAGS = -O3 -DNDEBUG
