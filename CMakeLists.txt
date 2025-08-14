@@ -19,7 +19,9 @@ add_executable(sadhana
   src/audio_input.cpp
   src/vad.cpp
   src/sqlite_logger.cpp
-  src/config.cpp        # NEW
+  src/config.cpp
+  src/phrase_spec.cpp        # NEW
+  src/phrase_match.cpp       # NEW
 )
 
 target_include_directories(sadhana PRIVATE src)
@@ -38,3 +40,4 @@ endif()
 set_target_properties(sadhana PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
+

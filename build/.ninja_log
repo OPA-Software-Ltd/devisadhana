@@ -1,7 +1,9 @@
 # ninja log v6
-2	411	1755202718154228269	CMakeFiles/sadhana.dir/src/vad.cpp.o	ec7991b64882d351
-2	1363	1755202718153957538	CMakeFiles/sadhana.dir/src/audio_input.cpp.o	f2c6a762acd59f02
-2	1531	1755202718154559941	CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o	6adfbe5d28742806
-3	1762	1755202718154937044	CMakeFiles/sadhana.dir/src/config.cpp.o	b10879e80e229c57
-2	2227	1755202718152514996	CMakeFiles/sadhana.dir/src/main.cpp.o	63da479cb2a2758
-2227	2297	1755202720377514969	bin/sadhana	c8dd8d7ff4b3c836
+4	603	1755203498765505340	CMakeFiles/sadhana.dir/src/vad.cpp.o	ec7991b64882d351
+6	1465	1755203498767505340	CMakeFiles/sadhana.dir/src/phrase_spec.cpp.o	cfaff4586879b10c
+3	1519	1755203498764505340	CMakeFiles/sadhana.dir/src/audio_input.cpp.o	f2c6a762acd59f02
+5	1936	1755203498766505340	CMakeFiles/sadhana.dir/src/config.cpp.o	b10879e80e229c57
+4	1975	1755203498766429144	CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o	6adfbe5d28742806
+2	2466	1755203498763505340	CMakeFiles/sadhana.dir/src/main.cpp.o	63da479cb2a2758
+3	1090	1755203565626504513	CMakeFiles/sadhana.dir/src/phrase_match.cpp.o	b491a4b35f85b15
+1090	1164	1755203566713504500	bin/sadhana	f1a0f18a9539e7a

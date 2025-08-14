@@ -2,13 +2,16 @@
 #include "rms.hpp"
 #include "vad.hpp"
 #include "sqlite_logger.hpp"
-#include "config.hpp"  // NEW
+#include "config.hpp"
+#include "phrase_spec.hpp"
+#include "phrase_match.hpp"
 #include <atomic>
 #include <algorithm>
 #include <chrono>
 #include <csignal>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -36,6 +39,10 @@ struct Args {
 
     // config path used (for info)
     std::string config_path;
+
+    // Phrase detection (phase 1: from transcript file)
+    std::string phrases_csv;        // --phrases <file>
+    std::string transcript_path;    // --from-transcript <file>
 };
 
 static const char* scan_flag_value(int argc, char** argv, const char* longflag, const char* shortflag) {
@@ -48,7 +55,6 @@ static const char* scan_flag_value(int argc, char** argv, const char* longflag, 
     return nullptr;
 }
 
-// Parse CLI flags and override values in 'a'.
 static void parse_args_into(Args& a, int argc, char** argv) {
     for (int i = 1; i < argc; ++i) {
         std::string s = argv[i];
@@ -65,21 +71,30 @@ static void parse_args_into(Args& a, int argc, char** argv) {
         else if (s == "--calib-rel-above-floor" && i + 1 < argc) a.calib_rel_above_floor = std::stof(argv[++i]);
         else if (s == "--show-thresholds") a.show_thresholds = true;
         else if ((s == "--config" || s == "-c") && i + 1 < argc) a.config_path = expand_path(argv[++i]);
+        else if (s == "--phrases" && i + 1 < argc) a.phrases_csv = argv[++i];
+        else if (s == "--from-transcript" && i + 1 < argc) a.transcript_path = argv[++i];
         else if (s == "--help" || s == "-h") {
-            std::cout << "Sadhana probe + VAD + calibration + config\n"
+            std::cout << "Sadhana — mic capture + VAD + calibration + config + phrase counting (from transcript)\n"
+                      << "Audio / device:\n"
                       << "  -l, --list-devices                 List input devices\n"
                       << "  -d, --device <index>               Use specific input device index\n"
                       << "      --sr <Hz>                      Sample rate (default 48000)\n"
                       << "      --fpb <frames>                 Frames per buffer (default 480)\n"
                       << "      --db <path>                    SQLite DB path (default XDG)\n"
+                      << "VAD:\n"
                       << "      --vad-attack <dB>              Absolute attack threshold (default -45)\n"
                       << "      --vad-release <dB>             Absolute release threshold (default -55)\n"
                       << "      --vad-hang <ms>                Hangover duration (default 200)\n"
+                      << "Calibration:\n"
                       << "      --calibrate <ms>               Measure noise floor for N ms, then set thresholds\n"
                       << "      --calib-attack <dB>            Attack margin above floor (default 18)\n"
                       << "      --calib-rel-above-floor <dB>   Release margin ABOVE floor (default 6)\n"
                       << "      --show-thresholds              Print final thresholds and EMA (debug)\n"
-                      << "  -c, --config <path>                Load config file (default: ~/.config/sadhana/sadhana.toml)\n";
+                      << "Config:\n"
+                      << "  -c, --config <path>                Load config file (default: ~/.config/sadhana/sadhana.toml)\n"
+                      << "Phrase counting (phase 1: from transcript):\n"
+                      << "      --phrases <csv>                CSV file: \"phrase\",target\n"
+                      << "      --from-transcript <txt>        Transcript text file to analyze\n";
             std::exit(0);
         }
     }
@@ -96,7 +111,7 @@ int main(int argc, char** argv) {
     std::signal(SIGINT, on_sigint);
     std::signal(SIGTERM, on_sigint);
 
-    // 1) Establish defaults and DB path
+    // Defaults and DB path
     Args args{};
     const char* xdg = std::getenv("XDG_DATA_HOME");
     if (xdg) args.db_path = std::string(xdg) + "/sadhana/sadhana.db";
@@ -105,14 +120,14 @@ int main(int argc, char** argv) {
         args.db_path = std::string(home ? home : ".") + "/.local/share/sadhana/sadhana.db";
     }
 
-    // 2) Find config path (CLI wins for path only)
+    // Config path
     if (const char* cp = scan_flag_value(argc, argv, "--config", "-c")) {
         args.config_path = expand_path(cp);
     } else {
         args.config_path = default_config_path();
     }
 
-    // 3) Load config file and apply as base values
+    // Load config defaults then override with CLI
     AppConfig cfg = load_config_file(args.config_path);
     if (cfg.device)                args.device_index = cfg.device;
     if (cfg.sample_rate)           args.sample_rate = *cfg.sample_rate;
@@ -126,16 +141,42 @@ int main(int argc, char** argv) {
     if (cfg.show_thresholds)       args.show_thresholds = *cfg.show_thresholds;
     if (cfg.db_path)               args.db_path = *cfg.db_path;
 
-    // 4) Parse CLI to override
     parse_args_into(args, argc, argv);
 
+    // ---- Phrase counting from transcript (no audio needed) ----
+    if (!args.phrases_csv.empty() && !args.transcript_path.empty()) {
+        auto phrases = load_phrases_csv(args.phrases_csv);
+
+        std::ifstream tf(args.transcript_path);
+        if (!tf.good()) {
+            std::cerr << "Error: cannot open transcript: " << args.transcript_path << "\n";
+            return 1;
+        }
+        std::string txt((std::istreambuf_iterator<char>(tf)), std::istreambuf_iterator<char>());
+        auto norm = normalize_text(txt);
+        auto counts = count_phrase_matches(norm, phrases);
+
+        std::cout << "=== Phrase counts (" << args.phrases_csv << ") over transcript (" << args.transcript_path << ") ===\n";
+        for (const auto& p : phrases) {
+            std::string key = normalize_text(p.text);
+            int got = counts[key].count;
+            if (p.target > 0) {
+                std::cout << p.text << " : " << got << " / " << p.target << "\n";
+            } else {
+                std::cout << p.text << " : " << got << "\n";
+            }
+        }
+        return 0;
+    }
+
+    // ---- Normal device listing ----
     if (args.list_devices) {
         auto devs = AudioInput::list_input_devices();
         for (const auto& d : devs) std::cout << d << "\n";
         return 0;
     }
 
-    // Resolve device index early and print a clear summary.
+    // ---- Live audio path (unchanged from before) ----
     int resolved_device = args.device_index.value_or(Pa_GetDefaultInputDevice());
     if (resolved_device == paNoDevice) {
         std::cerr << "Error: no default input device available.\n";
@@ -174,7 +215,6 @@ int main(int argc, char** argv) {
         });
         ai.start();
 
-        // Optional calibration
         if (args.calibrate_ms > 0) {
             std::cout << "Calibrating noise floor for " << args.calibrate_ms << " ms… stay quiet.\n";
             std::vector<float> samples;
@@ -185,15 +225,12 @@ int main(int argc, char** argv) {
                 samples.push_back(last_db.load(std::memory_order_relaxed));
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
-
             float floor_db = percentile(samples, 0.10f);
-            float attack  = floor_db + args.calib_attack;          // enter speech
-            float release = floor_db + args.calib_rel_above_floor; // keep speech
-            if (release >= attack - 8.0f) release = attack - 8.0f; // hysteresis
-
+            float attack  = floor_db + args.calib_attack;
+            float release = floor_db + args.calib_rel_above_floor;
+            if (release >= attack - 8.0f) release = attack - 8.0f;
             attack  = std::clamp(attack,  -30.0f, -1.0f);
             release = std::clamp(release, -90.0f, attack - 6.0f);
-
             vad.reset_ema(floor_db);
             vad.set_thresholds(attack, release);
             std::cout << "Calibrated floor ≈ " << floor_db
@@ -228,3 +265,4 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
+
