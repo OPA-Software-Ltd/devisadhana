@@ -1,0 +1,6 @@
+# ninja log v6
+2	366	1755201684264081123	CMakeFiles/sadhana.dir/src/vad.cpp.o	ec7991b64882d351
+2	906	1755201684262527785	CMakeFiles/sadhana.dir/src/audio_input.cpp.o	f2c6a762acd59f02
+2	1384	1755201684264396691	CMakeFiles/sadhana.dir/src/sqlite_logger.cpp.o	6adfbe5d28742806
+1	2010	1755201684261527785	CMakeFiles/sadhana.dir/src/main.cpp.o	63da479cb2a2758
+2010	2083	1755201686271527761	bin/sadhana	69d7d856c62aeb4a

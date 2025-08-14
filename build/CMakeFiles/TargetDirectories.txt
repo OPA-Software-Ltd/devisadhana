@@ -1,0 +1,3 @@
+/home/sophia/Documents/development/devisadhana/build/CMakeFiles/sadhana.dir
+/home/sophia/Documents/development/devisadhana/build/CMakeFiles/edit_cache.dir
+/home/sophia/Documents/development/devisadhana/build/CMakeFiles/rebuild_cache.dir

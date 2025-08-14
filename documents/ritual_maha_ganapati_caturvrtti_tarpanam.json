@@ -1,0 +1,376 @@
+{
+  "id": "maha_ganapati_caturvrtti_tarpanam",
+  "title": "Mahā Gaṇapati Caturvṛtti Tarpanam",
+  "version": "1.0.0",
+  "source": "Guruji PDF provided by user",
+  "metadata": {
+    "language": "en",
+    "scripts_supported": [
+      "IAST",
+      "Devanagari",
+      "ASCII"
+    ],
+    "notes": "Counts and structure derived from PDF; iteration marker is the pour cue 'Tarpayaami Namaha'."
+  },
+  "materials": [
+    {
+      "id": "achamana_patra",
+      "name": "Achamana Patra set",
+      "details": "Copper/Brass glass, small plate, and uddarini (spoon)"
+    },
+    {
+      "id": "gangal",
+      "name": "Gangal",
+      "details": "Large vessel (preferably copper/brass) for Sugandha Jala"
+    },
+    {
+      "id": "parat",
+      "name": "Parat",
+      "details": "Wide platter (preferably copper/brass); place betel leaf in it"
+    },
+    {
+      "id": "betel_leaf",
+      "name": "Betel leaf"
+    },
+    {
+      "id": "turmeric_powder",
+      "name": "Turmeric powder"
+    },
+    {
+      "id": "sandalwood",
+      "name": "Sandalwood paste/powder"
+    },
+    {
+      "id": "cardamom",
+      "name": "Cardamom powder"
+    },
+    {
+      "id": "saffron",
+      "name": "Saffron strands",
+      "optional": true
+    },
+    {
+      "id": "edible_camphor",
+      "name": "Edible camphor (food-grade)"
+    },
+    {
+      "id": "raw_rice",
+      "name": "Raw rice (unbroken)"
+    },
+    {
+      "id": "ghee",
+      "name": "Ghee"
+    }
+  ],
+  "mantras": {
+    "moola_mantra": "Om Sreem Hreem Kleem Gloum Gum Ganapathaye Vara Varada Sarva Janam Mey/Vashamanaya Swaahaa",
+    "achamanam": [
+      "Aim Aatma Tatvaaya Swaahaa",
+      "Kleem Vidya Tatvaaya Swaahaa",
+      "Souhu Siva Tatvaaya Swaahaa",
+      "Aim Kleem Souh Sarva Tatvebhya Swaahaa"
+    ],
+    "pranayama_note": "Three cycles with Ganapati mantra; start with 'Om Gam Ganapataye Namaha' (laghu), later use moola mantra.",
+    "sankalpa": "Mama Upaatta Samastha Duritakshaya dwaaraa Sri Vallabha Sri Maha Ganapati preethyartham tarpanam karishye",
+    "theertha": "Aayur Aarogyam Aishwarya Balam Pushtir Mahad Yashah। Kavitvam Bhukti Mukticha Chaturavrutti Tarpanaath ॥"
+  },
+  "sections": [
+    {
+      "id": "purvangam",
+      "title": "Pūrvāṅgam (Preparation & Nyasa)",
+      "steps": [
+        {
+          "id": "sugandha_jala",
+          "title": "Prepare Sugandha Jala",
+          "items": [
+            "sandalwood",
+            "turmeric_powder",
+            "cardamom",
+            "saffron",
+            "edible_camphor"
+          ],
+          "instructions": [
+            "Fill clean vessel with water.",
+            "Add sandalwood, turmeric, cardamom; optionally saffron; add a small amount of edible camphor.",
+            "Stir with devotion; this becomes Sugandha Jala."
+          ]
+        },
+        {
+          "id": "turmeric_ganapati",
+          "title": "Form Turmeric Ganapati",
+          "items": [
+            "turmeric_powder",
+            "betel_leaf",
+            "parat"
+          ],
+          "instructions": [
+            "Make turmeric paste and shape into a pyramid with a square base (Ganapati).",
+            "Place on betel leaf inside wide bowl/platter."
+          ]
+        },
+        {
+          "id": "kumkum",
+          "title": "Apply Kumkum",
+          "instructions": [
+            "Apply kumkum to the side of the turmeric Ganapati facing you."
+          ]
+        },
+        {
+          "id": "akshata",
+          "title": "Prepare Akshatas",
+          "items": [
+            "raw_rice",
+            "turmeric_powder",
+            "ghee"
+          ],
+          "instructions": [
+            "Mix raw rice with turmeric and a drop of ghee."
+          ]
+        },
+        {
+          "id": "guru_dhyanam",
+          "title": "Guru Dhyaanam",
+          "mantra_refs": [
+            "guru_dhyana_verses"
+          ]
+        },
+        {
+          "id": "ganapati_dhyanam",
+          "title": "Ganapati Dhyaanam",
+          "mantra_refs": [
+            "ganapati_dhyana_verses"
+          ]
+        },
+        {
+          "id": "achamanam",
+          "title": "Ācamana",
+          "mantra_refs": [
+            "achamanam"
+          ]
+        },
+        {
+          "id": "pranayama",
+          "title": "Prāṇāyāma",
+          "instructions": [
+            "Perform three cycles of alternate-nostril pranayama with the Ganapati mantra (see note)."
+          ]
+        },
+        {
+          "id": "sankalpa",
+          "title": "Saṅkalpa",
+          "mantra_refs": [
+            "sankalpa"
+          ],
+          "instructions": [
+            "Hold akshatas in right fist over left palm, on right thigh. Recite saṅkalpa. Offer akshatas to turmeric Ganapati."
+          ]
+        },
+        {
+          "id": "prana_pratishta",
+          "title": "Prāṇa Pratiṣṭhā",
+          "instructions": [
+            "Hold a few akshatas at the heart; recite moola mantra four times visualizing Ganapati seated in the heart.",
+            "Place akshatas on the turmeric Ganapati."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tarpanam",
+      "title": "Tarpana Procedure",
+      "iteration_marker": {
+        "canonical": "tarpayaami namaha",
+        "variants": [
+          "tarpayami namaha",
+          "tarpayaami namah",
+          "tarpayami namah",
+          "tarpayaami namaḥ",
+          "tarpanam namaha"
+        ],
+        "with_svaha_variants": true,
+        "cooldown_ms": 700
+      },
+      "parts": [
+        {
+          "id": "moola_mantra_tarpanam",
+          "title": "Moola Mantra Tarpanam",
+          "repetitions": 12,
+          "utterance": "Om Sreem Hreem Kleem Gloum Gum Ganapathaye Vara Varada Sarva Janam Mey/Vashamanaya Swaahaa — Tarpayaami Namaha",
+          "notes": "Pour when saying 'Tarpayaami Namaha' each time."
+        },
+        {
+          "id": "beeja_akshara_tarpanam",
+          "title": "Bīja Akṣara Tarpanam",
+          "beeja_order": [
+            "OM",
+            "SREEM",
+            "HREEM",
+            "KLEEM",
+            "GLOUM",
+            "GUM",
+            "GA",
+            "NA",
+            "PA",
+            "THA",
+            "YE",
+            "VA",
+            "RA",
+            "VA",
+            "RA",
+            "DA",
+            "SA",
+            "RVA",
+            "JA",
+            "NAM",
+            "MAY",
+            "VA",
+            "SA",
+            "MAA",
+            "NA",
+            "YA",
+            "SWAA",
+            "HA"
+          ],
+          "set_definition": {
+            "repeat_sets": 4,
+            "actions_per_set": [
+              {
+                "say": "<BEEJA> Swaahaa — Tarpayaami Namaha",
+                "pour": true
+              },
+              {
+                "say": "<MOOLA_MANTRA> Swaahaa — Tarpayaami Namaha",
+                "pour": true
+              }
+            ]
+          },
+          "derived_counts": {
+            "offerings_per_beeja": 8,
+            "total_offerings": 224
+          }
+        },
+        {
+          "id": "mithuna_devata_tarpanam",
+          "title": "Mithuna Devata (paired deities) Tarpanam",
+          "pairs": [
+            [
+              "Sreem",
+              "Sreepatim"
+            ],
+            [
+              "Girijaam",
+              "Girijaapatim"
+            ],
+            [
+              "Ratim",
+              "Ratipatim"
+            ],
+            [
+              "Maheem",
+              "Maheepatim"
+            ],
+            [
+              "Mahalakshmeem",
+              "Mahalakshmeepatim"
+            ],
+            [
+              "Riddhim",
+              "Aamodam"
+            ],
+            [
+              "Samruddhim",
+              "Pramodam"
+            ],
+            [
+              "Kaantim",
+              "Sumukham"
+            ],
+            [
+              "Madanavateem",
+              "Durmukham"
+            ],
+            [
+              "Mada dravaam",
+              "Avighnam"
+            ],
+            [
+              "DraviNeem",
+              "Vighna Kartaaram"
+            ],
+            [
+              "Vasudhaaraam",
+              "Sankhanidhim"
+            ],
+            [
+              "Vasumatim",
+              "Padmanidhim"
+            ]
+          ],
+          "set_definition": {
+            "repeat_sets": 4,
+            "actions_per_set": [
+              {
+                "say": "<LEFT> Tarpayaami Namaha",
+                "pour": true
+              },
+              {
+                "say": "<MOOLA_MANTRA> Swaahaa — Tarpayaami Namaha",
+                "pour": true
+              },
+              {
+                "say": "<RIGHT> Tarpayaami Namaha",
+                "pour": true
+              },
+              {
+                "say": "<MOOLA_MANTRA> Swaahaa — Tarpayaami Namaha",
+                "pour": true
+              }
+            ]
+          },
+          "derived_counts": {
+            "offerings_per_pair": 16,
+            "total_pairs": 13,
+            "total_offerings": 208
+          }
+        }
+      ],
+      "derived_totals": {
+        "moola": 12,
+        "beeja": 224,
+        "mithuna": 208,
+        "grand_total_offerings": 444
+      }
+    },
+    {
+      "id": "uttarangam",
+      "title": "Uttarāṅgam (Theertha Sweekarana)",
+      "steps": [
+        {
+          "id": "sprinkle_theertha",
+          "title": "Sprinkle Theertha",
+          "mantra_refs": [
+            "theertha"
+          ],
+          "instructions": [
+            "Sprinkle the turmeric water over the head (self and family) while chanting the blessing verse."
+          ]
+        },
+        {
+          "id": "drink_theertha",
+          "title": "Drink Theertha",
+          "instructions": [
+            "Drink a spoonful in the right hand without touching the upper lip."
+          ]
+        },
+        {
+          "id": "use_remaining",
+          "title": "Use Remaining Water",
+          "instructions": [
+            "Mix into bath water or offer to plants."
+          ]
+        }
+      ],
+      "discipline_note": "Perform tarpanams for 45 consecutive days; women may pause due to biological cycles."
+    }
+  ]
+}
