@@ -168,7 +168,7 @@ std::optional<PhraseManager::MarkerInfo> PhraseManager::findBestMatch(
 
     for (const auto& [marker, infos] : markerCache_) {
         float confidence = calculatePhraseConfidence(normalizedText, marker);
-        if (confidence > bestConfidence && confidence >= 0.8f) { // Minimum threshold
+        if (confidence > bestConfidence && confidence >= 0.6f) { // Minimum threshold
             bestConfidence = confidence;
             bestMatch = infos[0]; // Take the first match if multiple exist
         }

@@ -125,7 +125,7 @@ int main() {
 
         sadhana::VAD vad(vadConfig);
         sadhana::VoskASR asr({
-            .modelPath = "models/vosk-model-small-en-us-0.15",
+            .modelPath = "models/vosk-model-en-in-0.5",
             .sampleRate = sadhana::AudioCapture::DEFAULT_SAMPLE_RATE
         });
 
