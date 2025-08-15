@@ -1,43 +1,40 @@
-cmake_minimum_required(VERSION 3.16)
-project(sadhana LANGUAGES CXX C)
+cmake_minimum_required(VERSION 3.31)
+project(untitled)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
-endif()
-
-option(SADHANA_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
-
+# Find required packages
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PORTAUDIO REQUIRED IMPORTED_TARGET portaudio-2.0)
-find_package(SQLite3 REQUIRED)
+pkg_check_modules(PORTAUDIO REQUIRED portaudio-2.0)
 
-add_executable(sadhana
-  src/main.cpp
-  src/audio_input.cpp
-  src/vad.cpp
-  src/sqlite_logger.cpp
-  src/config.cpp
-  src/phrase_spec.cpp        # NEW
-  src/phrase_match.cpp       # NEW
+# Add Vosk
+find_library(VOSK_LIBRARY vosk REQUIRED)
+
+include_directories(
+    ${PORTAUDIO_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes/audio
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes/asr
+    /usr/include/vosk  # Add this line - adjust path as needed
 )
 
-target_include_directories(sadhana PRIVATE src)
-
-target_link_libraries(sadhana PRIVATE PkgConfig::PORTAUDIO SQLite::SQLite3)
-
-if (MSVC)
-  target_compile_options(sadhana PRIVATE /W4)
-else()
-  target_compile_options(sadhana PRIVATE -Wall -Wextra -Wpedantic)
-  if (SADHANA_WARNINGS_AS_ERRORS)
-    target_compile_options(sadhana PRIVATE -Werror)
-  endif()
-endif()
-
-set_target_properties(sadhana PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+add_executable(untitled
+    main.cpp
+    src/audio/audio_capture.cpp
+    src/audio/vad.cpp
+    src/asr/vosk_asr.cpp
 )
 
+target_link_libraries(untitled
+    ${PORTAUDIO_LIBRARIES}
+    ${VOSK_LIBRARY}
+    -lpthread
+)
+
+# Copy models directory
+add_custom_command(TARGET untitled POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/models
+    ${CMAKE_BINARY_DIR}/models
+)
