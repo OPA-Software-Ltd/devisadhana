@@ -10,8 +10,6 @@
 #include <nlohmann/json.hpp>
 #include <mutex>
 #include "phrase/phrase_manager.hpp"
-
-// Add these includes at the top
 #include <filesystem>
 #include <fstream>
 
@@ -46,14 +44,11 @@ int main() {
     signal(SIGINT, signalHandler);
 
     try {
-        // In main(), before loading the ritual:
         const std::string ritualPath = "rituals/definitions/ganapati/maha_ganapati_caturvrtti_tarpanam.json";
 
-        // Check if the file exists and is readable
         if (std::filesystem::exists(ritualPath)) {
             std::cout << "File exists at: " << std::filesystem::absolute(ritualPath) << std::endl;
             
-            // Try to read the file content
             std::ifstream file(ritualPath);
             if (file.is_open()) {
                 std::string content((std::istreambuf_iterator<char>(file)),
@@ -66,7 +61,6 @@ int main() {
         } else {
             std::cerr << "File does not exist at: " << std::filesystem::absolute(ritualPath) << std::endl;
             
-            // Try to list the contents of the rituals directory
             try {
                 std::cout << "Contents of rituals directory:" << std::endl;
                 for (const auto& entry : std::filesystem::recursive_directory_iterator("rituals")) {
@@ -77,10 +71,8 @@ int main() {
             }
         }
 
-        // Then proceed with loading the ritual
         sadhana::RitualDefinition ritual;
 
-        // Test ritual definition loading
         std::cout << "Loading ritual definition...\n";
         if (!ritual.loadFromFile("rituals/definitions/ganapati/maha_ganapati_caturvrtti_tarpanam.json")) {
             std::cerr << "Failed to load ritual definition\n";
@@ -95,10 +87,8 @@ int main() {
                   << "Mantras: " << ritual.getMantras().size() << "\n"
                   << "Sections: " << ritual.getSections().size() << "\n\n";
 
-        // Create PhraseManager with loaded ritual
         sadhana::PhraseManager phraseManager(ritual);
 
-        // Rest of the existing audio setup code
         sadhana::AudioCapture audio;
         auto devices = audio.listDevices();
         std::cout << "Available input devices:\n";
@@ -114,7 +104,6 @@ int main() {
             return 1;
         }
 
-        // Adjusted VAD settings for better speech detection
         sadhana::VAD::Config vadConfig;
         vadConfig.attackThreshold = 15.0f;
         vadConfig.releaseThreshold = 12.0f;
@@ -163,7 +152,6 @@ int main() {
             bool wasSpeechActive = vad.isSpeechActive();
             bool isSpeechActive = vad.process(samples, numSamples);
 
-            // Start recording when speech becomes active
             if (isSpeechActive && !recording) {
                 recording = true;
                 speechBuffer.clear();
@@ -175,12 +163,10 @@ int main() {
                 }
             }
 
-            // Collect samples while recording
             if (recording) {
                 speechBuffer.insert(speechBuffer.end(), samples, samples + numSamples);
             }
 
-            // Process speech when it ends
             if (recording && (!isSpeechActive && wasSpeechActive)) {
                 if (speechBuffer.size() >= sadhana::AudioCapture::DEFAULT_SAMPLE_RATE * 0.3) {
                     std::string result = asr.processAudio(speechBuffer.data(), speechBuffer.size());
@@ -193,7 +179,6 @@ int main() {
                                 std::lock_guard<std::mutex> lock(consoleMutex);
                                 std::cout << "\nTranscribed: \"" << text << "\"\n";
 
-                                // Try to match the phrase with ritual markers
                                 auto match = phraseManager.matchPhrase(text);
                                 if (!match.matchedText.empty()) {
                                     std::cout << "Matched: " << match.matchedText << "\n"
@@ -214,7 +199,6 @@ int main() {
                 speechBuffer.clear();
             }
 
-            // Update status when not recording
             if (!recording) {
                 std::lock_guard<std::mutex> lock(consoleMutex);
                 std::cout << "\rLevel: " << std::fixed << std::setprecision(1) 

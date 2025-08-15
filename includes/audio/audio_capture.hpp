@@ -1,7 +1,6 @@
 #pragma once
 #include <portaudio.h>
 #include <functional>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -25,8 +24,8 @@ public:
               std::function<void(const float*, size_t)> callback);
     void stop();
 
-    static constexpr int DEFAULT_SAMPLE_RATE = 48000;  // Changed to 48kHz
-    static constexpr int DEFAULT_FRAMES_PER_BUFFER = 480 * 3; // Still ~30ms at 48kHz
+    static constexpr int DEFAULT_SAMPLE_RATE = 48000;
+    static constexpr int DEFAULT_FRAMES_PER_BUFFER = 480 * 3;
 
 private:
     static int paCallback(const void* input, void* output,
@@ -40,4 +39,4 @@ private:
     std::function<void(const float*, size_t)> dataCallback_;
 };
 
-} // namespace sadhana
+}

@@ -1,4 +1,3 @@
-// vosk_asr.hpp
 #pragma once
 
 #include <string>
@@ -31,4 +30,4 @@ private:
     std::unique_ptr<VoskRecognizer, VoskRecognizerDeleter> recognizer_;
 };
 
-} // namespace sadhana
+}

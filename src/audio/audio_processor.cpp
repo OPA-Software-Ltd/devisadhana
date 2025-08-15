@@ -1,7 +1,5 @@
-// src/audio/audio_processor.cpp
 #include "audio/audio_processor.hpp"
 #include <nlohmann/json.hpp>
-#include <iostream>
 
 namespace sadhana {
 
@@ -18,13 +16,11 @@ RitualAudioProcessor::~RitualAudioProcessor() {
 bool RitualAudioProcessor::init(const Config& config) {
     config_ = config;
 
-    // Initialize VAD
     vad_ = std::make_unique<VAD>(config.vadConfig);
     vad_->setStateChangeCallback([this](bool active) {
         handleSpeechStateChange(active);
     });
 
-    // Initialize ASR
     asr_ = std::make_unique<VoskASR>(config.asrConfig);
     if (!asr_->init()) {
         notifyError("Failed to initialize ASR system");
@@ -67,17 +63,14 @@ void RitualAudioProcessor::handleAudioData(const float* samples, size_t numSampl
     bool wasSpeechActive = speechActive_;
     speechActive_ = vad_->process(samples, numSamples);
 
-    // Start recording when speech becomes active
     if (speechActive_ && !wasSpeechActive) {
         speechBuffer_.clear();
     }
 
-    // Collect samples while speech is active
     if (speechActive_) {
         speechBuffer_.insert(speechBuffer_.end(), samples, samples + numSamples);
     }
 
-    // Process completed utterance
     if (!speechActive_ && wasSpeechActive && !speechBuffer_.empty()) {
         std::string result = asr_->processAudio(speechBuffer_.data(), speechBuffer_.size());
         processTranscription(result);
@@ -108,7 +101,6 @@ void RitualAudioProcessor::processTranscription(const std::string& text) {
 }
 
 void RitualAudioProcessor::updateProgress(const ProcessingResult& result) {
-    // Update progress based on the matched result
     if (result.sectionId != currentProgress_.currentSectionId) {
         currentProgress_.currentSectionId = result.sectionId;
         currentProgress_.currentPartId.clear();
@@ -123,7 +115,6 @@ void RitualAudioProcessor::updateProgress(const ProcessingResult& result) {
         currentProgress_.currentStepId = result.stepId;
     }
 
-    // Update counts based on marker type
     if (result.markerType == "iteration") {
         currentProgress_.currentRepetition++;
         currentProgress_.counts[result.partId]++;
@@ -158,4 +149,4 @@ void RitualAudioProcessor::notifyError(const std::string& error) {
     }
 }
 
-} // namespace sadhana
+}

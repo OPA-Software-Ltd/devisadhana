@@ -36,4 +36,4 @@ private:
     std::function<void(bool)> stateChangeCallback_;
 };
 
-} // namespace sadhana
+}

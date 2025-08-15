@@ -43,7 +43,7 @@ bool AudioCapture::setDevice(int deviceIndex) {
     
     const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(deviceIndex);
     if (deviceInfo && deviceInfo->maxInputChannels > 0) {
-        selectedDevice_ = deviceIndex;  // Store the selected device
+        selectedDevice_ = deviceIndex;
         return true;
     }
     return false;
@@ -58,7 +58,7 @@ bool AudioCapture::start(int sampleRate, int framesPerBuffer,
     dataCallback_ = std::move(callback);
 
     PaStreamParameters inputParams = {};
-    // Use the selected device instead of the default
+
     inputParams.device = selectedDevice_ >= 0 ? selectedDevice_ : Pa_GetDefaultInputDevice();
     
     const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(inputParams.device);
@@ -66,13 +66,11 @@ bool AudioCapture::start(int sampleRate, int framesPerBuffer,
         std::cerr << "Error: Could not get device info for device " << inputParams.device << std::endl;
         return false;
     }
-    
-    // Use stereo if the device doesn't support mono
+
     inputParams.channelCount = deviceInfo->maxInputChannels >= 1 ? 1 : 2;
     inputParams.sampleFormat = paFloat32;
     inputParams.suggestedLatency = deviceInfo->defaultLowInputLatency;
-    
-    // Check if sample rate is supported
+
     PaError err = Pa_IsFormatSupported(&inputParams, nullptr, sampleRate);
     if (err != paFormatIsSupported) {
         std::cerr << "Error: Sample format or rate not supported: " << Pa_GetErrorText(err) << std::endl;
@@ -84,7 +82,7 @@ bool AudioCapture::start(int sampleRate, int framesPerBuffer,
     
     err = Pa_OpenStream(&stream_,
                        &inputParams,
-                       nullptr,  // No output
+                       nullptr,
                        sampleRate,
                        framesPerBuffer,
                        paClipOff,
@@ -121,7 +119,7 @@ int AudioCapture::paCallback(const void* input, void* output,
                            const PaStreamCallbackTimeInfo* timeInfo,
                            PaStreamCallbackFlags statusFlags,
                            void* userData) {
-    (void)output;  // Unused
+    (void)output;
     (void)timeInfo;
     (void)statusFlags;
     
@@ -135,4 +133,4 @@ int AudioCapture::paCallback(const void* input, void* output,
     return paContinue;
 }
 
-} // namespace sadhana
+}

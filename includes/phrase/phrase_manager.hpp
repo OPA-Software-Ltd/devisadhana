@@ -1,4 +1,3 @@
-// includes/phrase_manager.hpp
 #pragma once
 
 #include "definition/definition.hpp"
@@ -16,7 +15,7 @@ public:
         std::string partId;
         std::string stepId;
         std::string matchedText;
-        std::string markerType;  // "step", "iteration", "completion", etc.
+        std::string markerType;
         float confidence;
         std::map<std::string, std::string> additionalData;
     };
@@ -28,7 +27,6 @@ public:
 private:
     const RitualDefinition& ritual_;
 
-    // Cache for normalized markers and their metadata
     struct MarkerInfo {
         std::string originalMarker;
         std::string sectionId;
@@ -48,4 +46,4 @@ private:
     bool generateSvahaVariants(const std::string& marker, const MarkerInfo& info);
 };
 
-} // namespace sadhana
+}

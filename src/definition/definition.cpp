@@ -6,14 +6,11 @@
 namespace sadhana {
 
 void RitualDefinition::loadMaterialsFromJson(const JsonValue& json) {
-    // Print debug info about the received JSON
     std::cout << "Loading materials from JSON..." << std::endl;
     std::cout << "JSON content type: " << json.type_name() << std::endl;
 
-    // Ensure we start with an empty materials list
     materials_.clear();
 
-    // Find the materials array
     const JsonValue* materialsArray = nullptr;
     
     if (json.contains("materials") && json["materials"].is_array()) {
@@ -27,11 +24,9 @@ void RitualDefinition::loadMaterialsFromJson(const JsonValue& json) {
         return;
     }
 
-    // Process each material in the array
     for (const auto& materialJson : *materialsArray) {
         Material material;
         
-        // Required fields
         if (!materialJson.contains("id") || !materialJson.contains("name")) {
             std::cerr << "Skipping material: missing required fields (id or name)" << std::endl;
             continue;
@@ -40,7 +35,6 @@ void RitualDefinition::loadMaterialsFromJson(const JsonValue& json) {
         material.id = materialJson["id"].get<std::string>();
         material.name = materialJson["name"].get<std::string>();
         
-        // Optional fields
         if (materialJson.contains("details")) {
             material.details = materialJson["details"].get<std::string>();
         }
@@ -48,7 +42,6 @@ void RitualDefinition::loadMaterialsFromJson(const JsonValue& json) {
             material.optional = materialJson["optional"].get<bool>();
         }
 
-        // Store any additional fields in additional_data
         for (const auto& [key, value] : materialJson.items()) {
             if (key != "id" && key != "name" && key != "details" && key != "optional") {
                 material.additional_data[key] = value;
@@ -81,11 +74,9 @@ bool RitualDefinition::loadFromFile(const std::string& filepath) {
             return false;
         }
 
-        // Calculate base paths
         std::filesystem::path absPath = std::filesystem::absolute(filepath);
         std::filesystem::path basePath = absPath.parent_path().parent_path().parent_path();
 
-        // Load materials if referenced
         if (mainJson.contains("materials_ref")) {
             auto materialsPath = basePath / "common" / "materials" /
                                (mainJson["materials_ref"].get<std::string>() + ".json");
@@ -102,17 +93,14 @@ bool RitualDefinition::loadFromFile(const std::string& filepath) {
             }
         }
 
-        // Load mantras if referenced
         if (mainJson.contains("mantras_ref")) {
             auto mantrasPath = basePath / "common" / "mantras" /
                               (mainJson["mantras_ref"].get<std::string>() + ".json");
             
-            // Debug information
             std::cout << "Debug: Base path: " << basePath << std::endl;
             std::cout << "Debug: Mantras ref: " << mainJson["mantras_ref"].get<std::string>() << std::endl;
             std::cout << "Debug: Full mantras path: " << mantrasPath << std::endl;
             
-            // Try to read file content directly
             std::ifstream testFile(mantrasPath);
             if (testFile.is_open()) {
                 std::string rawContent;
@@ -199,18 +187,15 @@ void RitualDefinition::loadProceduresFromJson(const JsonValue& json) {
 }
 
 void RitualDefinition::parseFromJson(const JsonValue& json) {
-    // Parse basic information
     id_ = json.at("id").get<std::string>();
     title_ = json.at("title").get<std::string>();
     version_ = json.at("version").get<std::string>();
     source_ = json.at("source").get<std::string>();
 
-    // Parse metadata (allowing any JSON structure)
     if (json.contains("metadata")) {
         metadata_ = json["metadata"].get<MetadataMap>();
     }
 
-    // Parse sections
     if (json.contains("sections")) {
         for (const auto& section_json : json["sections"]) {
             Section section;
@@ -218,7 +203,6 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
             section.title = section_json.at("title").get<std::string>();
             section.notes = section_json.value("discipline_note", "");
 
-            // Parse iteration marker if present
             if (section_json.contains("iteration_marker")) {
                 const auto& marker_json = section_json["iteration_marker"];
                 ProgressMarker marker;
@@ -227,7 +211,6 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                 marker.with_svaha_variants = marker_json.value("with_svaha_variants", false);
                 marker.cooldown_ms = marker_json.value("cooldown_ms", 700);
 
-                // Store any additional marker parameters
                 for (const auto& [key, value] : marker_json.items()) {
                     if (key != "canonical" && key != "variants" &&
                         key != "with_svaha_variants" && key != "cooldown_ms") {
@@ -238,7 +221,6 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                 section.iteration_marker = std::move(marker);
             }
 
-            // Parse parts if present
             if (section_json.contains("parts")) {
                 std::vector<Part> parts;
                 for (const auto& part_json : section_json["parts"]) {
@@ -247,7 +229,6 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                     part.title = part_json.at("title").get<std::string>();
                     part.notes = part_json.value("notes", "");
 
-                    // Optional fields
                     if (part_json.contains("repetitions")) {
                         part.repetitions = part_json["repetitions"].get<int>();
                     }
@@ -261,14 +242,12 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                         part.pairs = part_json["pairs"].get<std::vector<std::vector<std::string>>>();
                     }
 
-                    // Parse counts if present
                     if (part_json.contains("derived_counts")) {
                         for (const auto& [key, value] : part_json["derived_counts"].items()) {
                             part.counts[key] = value.get<int>();
                         }
                     }
 
-                    // Store any additional part data
                     for (const auto& [key, value] : part_json.items()) {
                         if (key != "id" && key != "title" && key != "notes" &&
                             key != "repetitions" && key != "utterance" &&
@@ -283,14 +262,12 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                 section.parts = std::move(parts);
             }
 
-            // Parse section counts if present
             if (section_json.contains("derived_totals")) {
                 for (const auto& [key, value] : section_json["derived_totals"].items()) {
                     section.counts[key] = value.get<int>();
                 }
             }
 
-            // Store any additional section data
             for (const auto& [key, value] : section_json.items()) {
                 if (key != "id" && key != "title" && key != "steps" &&
                     key != "parts" && key != "iteration_marker" &&
@@ -314,7 +291,6 @@ std::vector<std::string> RitualDefinition::getAllMarkers() const {
     std::vector<std::string> markers;
 
     for (const auto& section : sections_) {
-        // Add section iteration markers
         if (section.iteration_marker) {
             markers.push_back(section.iteration_marker->canonical);
             markers.insert(markers.end(),
@@ -322,7 +298,6 @@ std::vector<std::string> RitualDefinition::getAllMarkers() const {
                          section.iteration_marker->variants.end());
         }
 
-        // Add markers from steps if present
         if (section.steps) {
             for (const auto& step : *section.steps) {
                 if (step.marker) {
@@ -340,7 +315,6 @@ std::vector<std::string> RitualDefinition::getAllMarkers() const {
 
 std::optional<int> RitualDefinition::getCooldownForMarker(const std::string& marker) const {
     for (const auto& section : sections_) {
-        // Check section iteration marker
         if (section.iteration_marker) {
             if (section.iteration_marker->canonical == marker ||
                 std::find(section.iteration_marker->variants.begin(),
@@ -350,7 +324,6 @@ std::optional<int> RitualDefinition::getCooldownForMarker(const std::string& mar
             }
         }
 
-        // Check step markers
         if (section.steps) {
             for (const auto& step : *section.steps) {
                 if (step.marker) {
@@ -369,14 +342,11 @@ std::optional<int> RitualDefinition::getCooldownForMarker(const std::string& mar
 }
 
 void RitualDefinition::loadMantrasFromJson(const JsonValue& json) {
-    // Print debug info about the received JSON
     std::cout << "Loading mantras from JSON..." << std::endl;
     std::cout << "JSON content type: " << json.type_name() << std::endl;
 
-    // Ensure we start with an empty mantras map
     mantras_.clear();
 
-    // Find the mantras object
     const JsonValue* mantrasObject = nullptr;
     
     if (json.contains("mantras") && json["mantras"].is_object()) {
@@ -390,8 +360,7 @@ void RitualDefinition::loadMantrasFromJson(const JsonValue& json) {
         return;
     }
 
-    // Process the mantras object
     mantras_ = mantrasObject->get<MantraMap>();
     std::cout << "Successfully loaded " << mantras_.size() << " mantras" << std::endl;
 }
-} // namespace sadhana
+}

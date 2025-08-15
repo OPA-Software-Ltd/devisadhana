@@ -1,4 +1,3 @@
-// includes/audio/audio_processor.hpp
 #pragma once
 
 #include "audio/audio_capture.hpp"
@@ -27,7 +26,7 @@ public:
         std::string partId;
         std::string stepId;
         std::string matchedText;
-        std::string markerType;  // "step", "iteration", "completion", etc.
+        std::string markerType;
         float confidence;
         std::map<std::string, std::string> additionalData;
     };
@@ -56,7 +55,6 @@ public:
     bool setAudioDevice(int deviceIndex);
     std::vector<AudioDevice> listAudioDevices() const;
 
-    // Callback setters
     void setProgressCallback(ProgressCallback callback) { progressCallback_ = std::move(callback); }
     void setResultCallback(ResultCallback callback) { resultCallback_ = std::move(callback); }
     void setErrorCallback(ErrorCallback callback) { errorCallback_ = std::move(callback); }
@@ -64,7 +62,6 @@ public:
         transcriptionCallback_ = std::move(callback);
     }
 
-    // Status queries
     bool isRunning() const { return running_; }
     bool isSpeechActive() const { return speechActive_; }
     const RitualProgress& getCurrentProgress() const { return currentProgress_; }
@@ -88,7 +85,6 @@ private:
     Config config_;
     RitualProgress currentProgress_;
 
-    // Marker state tracking
     struct MarkerState {
         std::chrono::steady_clock::time_point lastTriggerTime;
         int cooldownMs;
@@ -105,4 +101,4 @@ private:
     void notifyError(const std::string& error);
 };
 
-} // namespace sadhana
+}

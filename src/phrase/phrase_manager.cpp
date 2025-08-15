@@ -1,9 +1,7 @@
-// src/ritual/phrase_manager.cpp
 #include "phrase_manager.hpp"
 #include <algorithm>
 #include <cctype>
 #include <regex>
-#include <unordered_set>
 
 namespace sadhana {
 
@@ -15,9 +13,7 @@ PhraseManager::PhraseManager(const RitualDefinition& ritual)
 void PhraseManager::buildMarkerCache() {
     markerCache_.clear();
 
-    // Process all sections
     for (const auto& section : ritual_.getSections()) {
-        // Process section iteration markers
         if (section.iteration_marker) {
             MarkerInfo info{
                 .originalMarker = section.iteration_marker->canonical,
@@ -25,21 +21,17 @@ void PhraseManager::buildMarkerCache() {
                 .markerType = "iteration"
             };
 
-            // Add canonical form
             addMarkerToCache(section.iteration_marker->canonical, info);
 
-            // Add variants
             for (const auto& variant : section.iteration_marker->variants) {
                 addMarkerToCache(variant, info);
             }
 
-            // Generate svaha variants if specified
             if (section.iteration_marker->with_svaha_variants) {
                 generateSvahaVariants(section.iteration_marker->canonical, info);
             }
         }
 
-        // Process steps if present
         if (section.steps) {
             for (const auto& step : *section.steps) {
                 if (step.marker) {
@@ -63,10 +55,8 @@ void PhraseManager::buildMarkerCache() {
             }
         }
 
-        // Process parts if present
         if (section.parts) {
             for (const auto& part : *section.parts) {
-                // Add any part-specific markers (e.g., from utterances or sequences)
                 if (part.utterance) {
                     MarkerInfo info{
                         .originalMarker = *part.utterance,
@@ -92,15 +82,13 @@ bool PhraseManager::generateSvahaVariants(const std::string& marker, const Marke
         "svaahaa", "svahaa", "svaha namaha"
     };
 
-    // Check if the marker already ends with any svaha variant
     std::string normalized = normalizeText(marker);
     for (const auto& svaha : svaha_variants) {
         if (normalized.ends_with(normalizeText(svaha))) {
-            return false; // Already has svaha
+            return false;
         }
     }
 
-    // Add variants with different svaha forms
     for (const auto& svaha : svaha_variants) {
         std::string variant = marker + " " + svaha;
         addMarkerToCache(variant, info);
@@ -113,14 +101,12 @@ std::string PhraseManager::normalizeText(const std::string& text) const {
     std::string normalized;
     normalized.reserve(text.length());
 
-    // Convert to lowercase and remove diacritics
     for (char c : text) {
         if (std::isalnum(c) || c == ' ') {
             normalized += std::tolower(c);
         }
     }
 
-    // Remove extra spaces
     normalized = std::regex_replace(normalized, std::regex("\\s+"), " ");
     normalized = std::regex_replace(normalized, std::regex("^\\s+|\\s+$"), "");
 
@@ -132,7 +118,6 @@ float PhraseManager::calculatePhraseConfidence(
     if (source == target) return 1.0f;
     if (source.empty() || target.empty()) return 0.0f;
 
-    // Calculate Levenshtein distance
     std::vector<std::vector<int>> distance(
         source.length() + 1,
         std::vector<int>(target.length() + 1));
@@ -148,9 +133,9 @@ float PhraseManager::calculatePhraseConfidence(
         for (size_t j = 1; j <= target.length(); j++) {
             int cost = (source[i - 1] == target[j - 1]) ? 0 : 1;
             distance[i][j] = std::min({
-                distance[i - 1][j] + 1,      // deletion
-                distance[i][j - 1] + 1,      // insertion
-                distance[i - 1][j - 1] + cost // substitution
+                distance[i - 1][j] + 1,
+                distance[i][j - 1] + 1,
+                distance[i - 1][j - 1] + cost
             });
         }
     }
@@ -168,9 +153,9 @@ std::optional<PhraseManager::MarkerInfo> PhraseManager::findBestMatch(
 
     for (const auto& [marker, infos] : markerCache_) {
         float confidence = calculatePhraseConfidence(normalizedText, marker);
-        if (confidence > bestConfidence && confidence >= 0.6f) { // Minimum threshold
+        if (confidence > bestConfidence && confidence >= 0.6f) {
             bestConfidence = confidence;
-            bestMatch = infos[0]; // Take the first match if multiple exist
+            bestMatch = infos[0];
         }
     }
 
@@ -195,4 +180,4 @@ PhraseManager::MatchResult PhraseManager::matchPhrase(const std::string& text) {
     return result;
 }
 
-} // namespace sadhana
+}
