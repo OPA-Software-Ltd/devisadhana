@@ -1,0 +1,24 @@
+{
+  "id": "maha_ganapati_caturvrtti_tarpanam",
+  "language": "en",
+  "translations": {
+    "title": "Four-fold Tarpanam to Maha Ganapati",
+    "sections": {
+      "purvangam": {
+        "title": "Preliminary Procedures",
+        "description": "Preparation and consecration procedures"
+      },
+      "tarpanam": {
+        "title": "Main Offering Procedure",
+        "description": "The main tarpanam offerings consisting of three parts"
+      },
+      "uttarangam": {
+        "title": "Concluding Procedures",
+        "description": "Final steps including receiving the blessed water"
+      }
+    },
+    "notes": {
+      "discipline": "Perform tarpanams for 45 consecutive days; women may pause due to biological cycles."
+    }
+  }
+}

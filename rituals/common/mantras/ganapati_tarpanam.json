@@ -1,0 +1,45 @@
+{
+  "id": "ganapati_tarpanam",
+  "mantras": {
+    "ganapati_moola": {
+      "text": "Om Sreem Hreem Kleem Gloum Gum Ganapathaye Vara Varada Sarva Janam Mey/Vashamanaya Swaahaa",
+      "type": "moola"
+    },
+    "achamana_sequence": [
+      "Aim Aatma Tatvaaya Swaahaa",
+      "Kleem Vidya Tatvaaya Swaahaa",
+      "Souhu Siva Tatvaaya Swaahaa",
+      "Aim Kleem Souh Sarva Tatvebhya Swaahaa"
+    ],
+    "ganapati_sankalpa": {
+      "text": "Mama Upaatta Samastha Duritakshaya dwaaraa Sri Vallabha Sri Maha Ganapati preethyartham tarpanam karishye"
+    },
+    "theertha_mantra": {
+      "text": "Aayur Aarogyam Aishwarya Balam Pushtir Mahad Yashah। Kavitvam Bhukti Mukticha Chaturavrutti Tarpanaath ॥"
+    },
+    "ganapati_beeja_sequence": {
+      "beejas": [
+        "OM", "SREEM", "HREEM", "KLEEM", "GLOUM", "GUM", "GA", "NA", "PA",
+        "THA", "YE", "VA", "RA", "VA", "RA", "DA", "SA", "RVA", "JA",
+        "NAM", "MAY", "VA", "SA", "MAA", "NA", "YA", "SWAA", "HA"
+      ]
+    },
+    "ganapati_mithuna_pairs": {
+      "pairs": [
+        ["Sreem", "Sreepatim"],
+        ["Girijaam", "Girijaapatim"],
+        ["Ratim", "Ratipatim"],
+        ["Maheem", "Maheepatim"],
+        ["Mahalakshmeem", "Mahalakshmeepatim"],
+        ["Riddhim", "Aamodam"],
+        ["Samruddhim", "Pramodam"],
+        ["Kaantim", "Sumukham"],
+        ["Madanavateem", "Durmukham"],
+        ["Mada dravaam", "Avighnam"],
+        ["DraviNeem", "Vighna Kartaaram"],
+        ["Vasudhaaraam", "Sankhanidhim"],
+        ["Vasumatim", "Padmanidhim"]
+      ]
+    }
+  }
+}
