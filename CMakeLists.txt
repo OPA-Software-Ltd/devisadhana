@@ -5,18 +5,14 @@ project(untitled)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Debug print for source and binary directories
 message(STATUS "Source directory: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Binary directory: ${CMAKE_BINARY_DIR}")
 
-# Find required packages
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PORTAUDIO REQUIRED portaudio-2.0)
 
-# Add Vosk
 find_library(VOSK_LIBRARY vosk REQUIRED)
 
-# Find nlohmann-json
 find_package(nlohmann_json 3.11.2 REQUIRED)
 
 include_directories(
@@ -49,21 +45,18 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_libraries(untitled stdc++fs)
 endif()
 
-# Verify ritual file exists in source directory
 if(EXISTS "${CMAKE_SOURCE_DIR}/rituals/definitions/ganapati/maha_ganapati_caturvrtti_tarpanam.json")
     message(STATUS "Ritual definition file found in source directory")
 else()
     message(WARNING "Ritual definition file NOT found in source directory")
 endif()
 
-# Copy rituals directory first (before models)
 add_custom_command(TARGET untitled PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/rituals
         ${CMAKE_BINARY_DIR}/rituals
 )
 
-# Copy models directory
 add_custom_command(TARGET untitled POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/models
