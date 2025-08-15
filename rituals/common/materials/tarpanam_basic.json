@@ -1,0 +1,90 @@
+{
+  "id": "tarpanam_basic",
+  "materials": [
+    {
+      "id": "achamana_patra",
+      "name": "Achamana Patra set",
+      "details": "Copper/Brass glass, small plate, and uddarini (spoon)",
+      "category": "vessels"
+    },
+    {
+      "id": "gangal",
+      "name": "Gangal",
+      "details": "Large vessel (preferably copper/brass) for Sugandha Jala",
+      "category": "vessels"
+    },
+    {
+      "id": "parat",
+      "name": "Parat",
+      "details": "Wide platter (preferably copper/brass); place betel leaf in it",
+      "category": "vessels"
+    },
+    {
+      "id": "betel_leaf",
+      "name": "Betel leaf",
+      "category": "leaves"
+    },
+    {
+      "id": "turmeric_powder",
+      "name": "Turmeric powder",
+      "details": "Used for multiple purposes including making Ganapati form",
+      "category": "powders"
+    },
+    {
+      "id": "sandalwood",
+      "name": "Sandalwood paste/powder",
+      "details": "For Sugandha Jala preparation",
+      "category": "powders"
+    },
+    {
+      "id": "cardamom",
+      "name": "Cardamom powder",
+      "details": "For Sugandha Jala preparation",
+      "category": "spices"
+    },
+    {
+      "id": "saffron",
+      "name": "Saffron strands",
+      "details": "For Sugandha Jala preparation (optional)",
+      "optional": true,
+      "category": "spices"
+    },
+    {
+      "id": "edible_camphor",
+      "name": "Edible camphor (food-grade)",
+      "details": "For Sugandha Jala preparation",
+      "category": "aromatics"
+    },
+    {
+      "id": "raw_rice",
+      "name": "Raw rice (unbroken)",
+      "details": "For akshata preparation",
+      "category": "grains"
+    },
+    {
+      "id": "ghee",
+      "name": "Ghee",
+      "details": "For akshata preparation",
+      "category": "offerings"
+    },
+    {
+      "id": "kumkum",
+      "name": "Kumkum",
+      "details": "For applying to turmeric Ganapati",
+      "category": "powders"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Basic materials required for tarpanam rituals",
+    "categories": [
+      "vessels",
+      "leaves",
+      "powders",
+      "spices",
+      "aromatics",
+      "grains",
+      "offerings"
+    ]
+  }
+}

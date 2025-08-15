@@ -1,0 +1,61 @@
+{
+  "procedures": {
+    "sugandha_jala_prep": {
+      "id": "sugandha_jala",
+      "title": "Prepare Sugandha Jala",
+      "items": [
+        "sandalwood",
+        "turmeric_powder",
+        "cardamom",
+        "saffron",
+        "edible_camphor"
+      ],
+      "instructions": [
+        "Fill clean vessel with water.",
+        "Add sandalwood, turmeric, cardamom; optionally saffron; add a small amount of edible camphor.",
+        "Stir with devotion; this becomes Sugandha Jala."
+      ]
+    },
+    "turmeric_ganapati_form": {
+      "id": "turmeric_ganapati",
+      "title": "Form Turmeric Ganapati",
+      "items": [
+        "turmeric_powder",
+        "betel_leaf",
+        "parat"
+      ],
+      "instructions": [
+        "Make turmeric paste and shape into a pyramid with a square base (Ganapati).",
+        "Place on betel leaf inside wide bowl/platter."
+      ]
+    },
+    "theertha_sweekarana": {
+      "id": "theertha_sweekarana",
+      "title": "Theertha Sweekarana",
+      "steps": [
+        {
+          "id": "sprinkle_theertha",
+          "title": "Sprinkle Theertha",
+          "mantra_ref": "theertha_mantra",
+          "instructions": [
+            "Sprinkle the turmeric water over the head (self and family) while chanting the blessing verse."
+          ]
+        },
+        {
+          "id": "drink_theertha",
+          "title": "Drink Theertha",
+          "instructions": [
+            "Drink a spoonful in the right hand without touching the upper lip."
+          ]
+        },
+        {
+          "id": "use_remaining",
+          "title": "Use Remaining Water",
+          "instructions": [
+            "Mix into bath water or offer to plants."
+          ]
+        }
+      ]
+    }
+  }
+}
