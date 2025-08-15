@@ -1,0 +1,74 @@
+{
+  "id": "maha_ganapati_caturvrtti_tarpanam",
+  "title": "Mahā Gaṇapati Caturvṛtti Tarpanam",
+  "version": "1.0.0",
+  "source": "Guruji PDF provided by user",
+  "metadata": {
+    "language": "en",
+    "scripts_supported": [
+      "IAST",
+      "Devanagari",
+      "ASCII"
+    ]
+  },
+  "materials_ref": "tarpanam_basic",
+  "mantras_ref": "ganapati_tarpanam",
+  "sections": [
+    {
+      "id": "purvangam",
+      "title": "Pūrvāṅgam (Preparation & Nyasa)",
+      "procedure_refs": [
+        "sugandha_jala_prep",
+        "turmeric_ganapati_form",
+        "basic_achamana",
+        "basic_pranayama",
+        "basic_sankalpa"
+      ]
+    },
+    {
+      "id": "tarpanam",
+      "title": "Tarpana Procedure",
+      "iteration_marker": {
+        "canonical": "tarpayaami namaha",
+        "variants": [
+          "tarpayami namaha",
+          "tarpayaami namah",
+          "tarpayami namah",
+          "tarpayaami namaḥ",
+          "tarpanam namaha"
+        ],
+        "with_svaha_variants": true,
+        "cooldown_ms": 700
+      },
+      "parts": [
+        {
+          "id": "moola_mantra_tarpanam",
+          "title": "Moola Mantra Tarpanam",
+          "repetitions": 12,
+          "mantra_ref": "ganapati_moola"
+        },
+        {
+          "id": "beeja_akshara_tarpanam",
+          "title": "Bīja Akṣara Tarpanam",
+          "mantra_ref": "ganapati_beeja_sequence"
+        },
+        {
+          "id": "mithuna_devata_tarpanam",
+          "title": "Mithuna Devata Tarpanam",
+          "mantra_ref": "ganapati_mithuna_pairs"
+        }
+      ],
+      "derived_totals": {
+        "moola": 12,
+        "beeja": 224,
+        "mithuna": 208,
+        "grand_total_offerings": 444
+      }
+    },
+    {
+      "id": "uttarangam",
+      "title": "Uttarāṅgam (Theertha Sweekarana)",
+      "procedure_refs": ["theertha_sweekarana"]
+    }
+  ]
+}
