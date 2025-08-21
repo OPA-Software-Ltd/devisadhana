@@ -1,0 +1,24 @@
+{
+  "flow_version": "1.0",
+  "ritual_id": "maha_ganapati_caturvrtti_tarpanam",
+  "execution": {
+    "recognition_settings": {
+      "default_threshold": 0.55,
+      "section_specific_thresholds": {
+        "purvangam": 0.65,
+        "tarpanam": 0.50,
+        "uttarangam": 0.65
+      }
+    },
+    "progress_rules": {
+      "allow_manual_advance": true,
+      "manual_advance_key": "space",
+      "max_consecutive_failures": 3,
+      "failure_action": "prompt_user"
+    },
+    "logging": {
+      "track_manual_interventions": true,
+      "track_recognition_failures": true
+    }
+  }
+}

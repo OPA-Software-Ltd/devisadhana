@@ -22,6 +22,7 @@ include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/audio
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/asr
         ${CMAKE_CURRENT_SOURCE_DIR}/includes/definition
+        ${CMAKE_CURRENT_SOURCE_DIR}/includes/ritual
         /usr/include/vosk
 )
 
@@ -32,6 +33,7 @@ add_executable(untitled
         src/asr/vosk_asr.cpp
         src/definition/definition.cpp
         src/phrase/phrase_manager.cpp
+        src/ritual/flow_manager.cpp
 )
 
 target_link_libraries(untitled

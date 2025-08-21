@@ -1,4 +1,3 @@
-
 #pragma once
 #include <chrono>
 #include <functional>
@@ -8,12 +7,14 @@ namespace sadhana {
 class VAD {
 public:
     struct Config {
-        float attackThreshold = 15.0f;
-        float releaseThreshold = 10.0f;
-        int hangTimeMs = 500;
-        int calibrationMs = 2000;
-        float calibrationAttackFactor = 0.05f;
-        float calibrationReleaseAboveFloor = 8.0f;
+        float attackThreshold{15.0f};
+        float releaseThreshold{12.0f};
+        int hangTimeMs{500};
+        int calibrationMs{2000};
+        float calibrationAttackFactor{0.05f};
+        float calibrationReleaseAboveFloor{10.0f};
+        int maxSilenceMs{3000};      // Add this
+        int maxRecordingMs{10000};   // Add this
     };
 
     explicit VAD(const Config& config);

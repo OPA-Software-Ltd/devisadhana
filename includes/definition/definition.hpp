@@ -1,8 +1,9 @@
 #pragma once
+
 #include <string>
 #include <vector>
-#include <map>
 #include <optional>
+#include <map>
 #include <nlohmann/json.hpp>
 
 namespace sadhana {
@@ -29,8 +30,10 @@ struct ProgressMarker {
 struct Part {
     std::string id;
     std::string title;
+    std::optional<std::string> description;    
     std::optional<int> repetitions;
     std::optional<std::string> utterance;
+    std::optional<std::string> mantra_ref;    // Add this line
     std::optional<std::vector<std::string>> sequence;
     std::optional<std::vector<std::vector<std::string>>> pairs;
     std::optional<std::map<std::string, RitualAction>> actions;
@@ -52,6 +55,8 @@ struct Step {
 struct Section {
     std::string id;
     std::string title;
+    std::optional<std::string> description;    // Add this
+    std::optional<std::string> introduction;   // Add this
     std::optional<std::vector<Step>> steps;
     std::optional<ProgressMarker> iteration_marker;
     std::optional<std::vector<Part>> parts;
@@ -89,6 +94,18 @@ public:
     std::optional<const Section*> findSection(const std::string& id) const;
     std::vector<std::string> getAllMarkers() const;
     std::optional<int> getCooldownForMarker(const std::string& marker) const;
+    
+    std::string getCurrentMantra(const std::string& sectionId, const std::string& partId) const;
+    int getRequiredRepetitions(const std::string& partId) const;
+
+    struct CurrentState {
+        std::string expectedUtterance;
+        std::string description;
+        int requiredRepetitions{1};
+        bool isComplete{false};
+    };
+
+    CurrentState getCurrentState(const std::string& sectionId, const std::string& partId) const;
 
 private:
     std::string id_;
@@ -106,4 +123,4 @@ private:
     void loadMantrasFromJson(const JsonValue& json);
 };
 
-}
+} // namespace sadhana

@@ -26,7 +26,23 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac5ea087-404e-437b-971d-866e4e233154" name="Changes" comment="" />
+    <list default="true" id="ac5ea087-404e-437b-971d-866e4e233154" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/includes/ritual/display_manager.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/includes/ritual/flow_manager.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/includes/ritual/keyboard_handler.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rituals/definitions/ganapati/flow.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ritual/flow_manager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/audio/vad.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/includes/audio/vad.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/definition/definition.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/includes/definition/definition.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/phrase/phrase_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/includes/phrase/phrase_manager.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rituals/common/mantras/ganapati_tarpanam.json" beforeDir="false" afterPath="$PROJECT_DIR$/rituals/common/mantras/ganapati_tarpanam.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rituals/definitions/ganapati/maha_ganapati_caturvrtti_tarpanam.json" beforeDir="false" afterPath="$PROJECT_DIR$/rituals/definitions/ganapati/maha_ganapati_caturvrtti_tarpanam.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/definition/definition.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/definition/definition.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/phrase/phrase_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/phrase/phrase_manager.cpp" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,11 +56,6 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
@@ -97,6 +108,7 @@
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.west.config.association.type.startup.service": "true",
     "cf.first.check.clang-format": "false",
@@ -139,7 +151,8 @@
       <option name="presentableId" value="Default" />
       <updated>1755210039743</updated>
       <workItem from="1755210041451" duration="11828000" />
-      <workItem from="1755231594751" duration="1231000" />
+      <workItem from="1755231594751" duration="2246000" />
+      <workItem from="1755775772671" duration="12454000" />
     </task>
     <servers />
   </component>

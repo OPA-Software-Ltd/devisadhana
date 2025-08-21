@@ -203,6 +203,14 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
             section.title = section_json.at("title").get<std::string>();
             section.notes = section_json.value("discipline_note", "");
 
+            // Add these lines
+            if (section_json.contains("description")) {
+                section.description = section_json["description"].get<std::string>();
+            }
+            if (section_json.contains("introduction")) {
+                section.introduction = section_json["introduction"].get<std::string>();
+            }
+
             if (section_json.contains("iteration_marker")) {
                 const auto& marker_json = section_json["iteration_marker"];
                 ProgressMarker marker;
@@ -229,6 +237,11 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                     part.title = part_json.at("title").get<std::string>();
                     part.notes = part_json.value("notes", "");
 
+                    // Add this line
+                    if (part_json.contains("description")) {
+                        part.description = part_json["description"].get<std::string>();
+                    }
+
                     if (part_json.contains("repetitions")) {
                         part.repetitions = part_json["repetitions"].get<int>();
                     }
@@ -246,6 +259,10 @@ void RitualDefinition::parseFromJson(const JsonValue& json) {
                         for (const auto& [key, value] : part_json["derived_counts"].items()) {
                             part.counts[key] = value.get<int>();
                         }
+                    }
+
+                    if (part_json.contains("mantra_ref")) {
+                        part.mantra_ref = part_json["mantra_ref"].get<std::string>();
                     }
 
                     for (const auto& [key, value] : part_json.items()) {
@@ -342,25 +359,108 @@ std::optional<int> RitualDefinition::getCooldownForMarker(const std::string& mar
 }
 
 void RitualDefinition::loadMantrasFromJson(const JsonValue& json) {
-    std::cout << "Loading mantras from JSON..." << std::endl;
-    std::cout << "JSON content type: " << json.type_name() << std::endl;
-
     mantras_.clear();
-
-    const JsonValue* mantrasObject = nullptr;
     
-    if (json.contains("mantras") && json["mantras"].is_object()) {
-        mantrasObject = &json["mantras"];
-    } else if (json.is_object()) {
-        mantrasObject = &json;
-    }
-
-    if (!mantrasObject) {
-        std::cerr << "Warning: No mantras object found in expected locations" << std::endl;
+    if (!json.contains("mantras")) {
+        std::cout << "Debug: No mantras section in JSON\n" << std::flush;
         return;
     }
+    
+    const auto& mantrasJson = json["mantras"];
+    std::cout << "Debug: Loading mantras:\n" << std::flush;
+    for (auto it = mantrasJson.begin(); it != mantrasJson.end(); ++it) {
+        std::cout << "Debug: Found mantra '" << it.key() << "': " 
+                  << it.value().dump() << "\n" << std::flush;
+        mantras_[it.key()] = it.value();
+    }
+    
+    std::cout << "Debug: Loaded " << mantras_.size() << " mantras\n" << std::flush;
+}
 
-    mantras_ = mantrasObject->get<MantraMap>();
-    std::cout << "Successfully loaded " << mantras_.size() << " mantras" << std::endl;
+std::string RitualDefinition::getCurrentMantra(const std::string& sectionId, const std::string& partId) const {
+    auto section = std::find_if(sections_.begin(), sections_.end(),
+        [&](const Section& s) { return s.id == sectionId; });
+        
+    if (section == sections_.end() || !section->parts) return "";
+    
+    auto part = std::find_if(section->parts->begin(), section->parts->end(),
+        [&](const Part& p) { return p.id == partId; });
+        
+    if (part == section->parts->end()) return "";
+    
+    // Return the utterance if it exists
+    if (part->utterance) {
+        return *part->utterance;
+    }
+    
+    return "";
 }
+
+int RitualDefinition::getRequiredRepetitions(const std::string& partId) const {
+    for (const auto& section : sections_) {
+        if (section.parts) {
+            auto part = std::find_if(section.parts->begin(), section.parts->end(),
+                [&](const Part& p) { return p.id == partId; });
+            if (part != section.parts->end()) {
+                return part->repetitions.value_or(1); // Return 1 if no repetitions specified
+            }
+        }
+    }
+    return 1; // Default to 1 if part not found
 }
+
+RitualDefinition::CurrentState RitualDefinition::getCurrentState(
+    const std::string& sectionId, const std::string& partId) const {
+    
+    CurrentState state;
+    std::cout << "Debug: Getting state for section: " << sectionId 
+              << ", part: " << partId << "\n" << std::flush;
+    
+    auto section = findSection(sectionId);
+    if (!section) return state;
+    
+    if (!partId.empty() && (*section)->parts) {
+        auto part = std::find_if((*section)->parts->begin(), (*section)->parts->end(),
+            [&partId](const auto& p) { return p.id == partId; });
+            
+        if (part != (*section)->parts->end()) {
+            if (part->mantra_ref) {
+                std::cout << "Debug: Found mantra_ref: " << *part->mantra_ref << "\n" << std::flush;
+                
+                auto mantraIt = mantras_.find(*part->mantra_ref);
+                if (mantraIt != mantras_.end()) {
+                    const auto& mantraJson = mantraIt->second;
+                    if (mantraJson.contains("text")) {
+                        state.expectedUtterance = mantraJson["text"].get<std::string>() + " tarpayaami namaha";
+                    } else if (mantraJson.contains("beejas")) {
+                        auto beejas = mantraJson["beejas"].get<std::vector<std::string>>();
+                        if (!beejas.empty()) {
+                            state.expectedUtterance = beejas[0] + " tarpayaami namaha";
+                        }
+                    } else if (mantraJson.contains("pairs")) {
+                        auto pairs = mantraJson["pairs"].get<std::vector<std::vector<std::string>>>();
+                        if (!pairs.empty() && pairs[0].size() >= 2) {
+                            state.expectedUtterance = pairs[0][0] + " " + pairs[0][1] + " tarpayaami namaha";
+                        }
+                    }
+                }
+            } else if (part->utterance) {
+                state.expectedUtterance = *part->utterance;
+            }
+            
+            if (part->repetitions) {
+                state.requiredRepetitions = *part->repetitions;
+            }
+            
+            if (part->description) {
+                state.description = *part->description;
+            }
+        }
+    }
+    
+    std::cout << "Debug: Final state - utterance: '" << state.expectedUtterance 
+              << "', repetitions: " << state.requiredRepetitions << "\n" << std::flush;
+    
+    return state;
+}
+} // namespace sadhana

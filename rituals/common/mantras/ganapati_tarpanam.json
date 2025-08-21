@@ -2,8 +2,81 @@
   "id": "ganapati_tarpanam",
   "mantras": {
     "ganapati_moola": {
-      "text": "Om Sreem Hreem Kleem Gloum Gum Ganapathaye Vara Varada Sarva Janam Mey/Vashamanaya Swaahaa",
-      "type": "moola"
+      "text": "Om Sreem Hreem Kleem Gloum Gum Ganapathaye Vara Varada Sarva Janam Mey Vashamanaya Swaahaa",
+      "type": "moola",
+      "full_variants": [
+        "om shame ram claim glum gum ganapatye a varavara the of run a mere washerman year for her",
+        "from shame him claim gram gom ganapatye a varavara the a mere rush manure for her",
+        "on frame her ram claim gram com ganapati a varavara the of iran a mere washerman year for her",
+        "on frame dream claim glam ganapati a of other servers run a mere washerman year",
+        "om same ram claim glam com ganapatye shah of iran amir vaswani",
+        "home frame him claim gram com ganapati a sort of iran the us malaysia for her"
+      ],
+      "recognition_parts": [
+        {
+          "base": "om sreem hreem kleem gloum gum",
+          "variants": [
+            "all shame ram claim glum com",
+            "home shame frame claim glam com",
+            "om shame ram claim glam com",
+            "mom shame him claim glam com",
+            "on fame fame claim gram gram",
+            "om shame him claim",
+            "on frame frame claim ram",
+            "calm frame haim claim glam",
+            "om same dream claim glam glam",
+            "on frame frame claim glam com",
+            "from shame him claim gram gom",
+            "on frame her ram claim gram com",
+            "home frame him claim gram com"
+          ]
+        },
+        {
+          "base": "ganapathaye",
+          "variants": [
+            "ganapati",
+            "ganapatye",
+            "ganapathy",
+            "ganapathi"
+          ]
+        },
+        {
+          "base": "vara varada",
+          "variants": [
+            "varavara",
+            "wherever",
+            "wherever the",
+            "service",
+            "sort of",
+            "word of"
+          ]
+        },
+        {
+          "base": "sarva janam mey",
+          "variants": [
+            "server run a mere",
+            "servers run a mere",
+            "service run a mere",
+            "shah of iran a mere",
+            "service animal",
+            "sort of iran the",
+            "of iran the us"
+          ]
+        },
+        {
+          "base": "vashamanaya swaahaa",
+          "variants": [
+            "washerman and swaha",
+            "washerman years",
+            "washerman year",
+            "washerman for her",
+            "washerman years for a",
+            "malaysia for her",
+            "manure for her",
+            "eyewash manure for her"
+          ]
+        }
+      ]
     },
     "achamana_sequence": [
       "Aim Aatma Tatvaaya Swaahaa",
@@ -19,9 +92,10 @@
     },
     "ganapati_beeja_sequence": {
       "beejas": [
-        "OM", "SREEM", "HREEM", "KLEEM", "GLOUM", "GUM", "GA", "NA", "PA",
-        "THA", "YE", "VA", "RA", "VA", "RA", "DA", "SA", "RVA", "JA",
-        "NAM", "MAY", "VA", "SA", "MAA", "NA", "YA", "SWAA", "HA"
+        "OM", "SREEM", "HREEM", "KLEEM", "GLOUM", "GUM",
+        "GA", "NA", "PA", "THA", "YE", "VA", "RA", "VA",
+        "RA", "DA", "SA", "RVA", "JA", "NAM", "MAY",
+        "VA", "SA", "MAA", "NA", "YA", "SWAA", "HA"
       ]
     },
     "ganapati_mithuna_pairs": {
